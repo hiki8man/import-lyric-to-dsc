@@ -33,22 +33,17 @@ note_triangle_hold = note_format + b'\x04\x00\x00\x00'
 import pprint
 import os
 
-#读入数据
-
+#写入数据
 def write(dsc_data_list, dsc_file_path):
     with open(dsc_file_path, 'wb') as fix_dsc:
         fix_dsc.write(ft_format)
         print(len(dsc_data_list))
         for data in dsc_data_list:
-            #print("time")
-            #print(data["time"])
-            #print("------------------------------------")
             if data["time"] != None: 
                 fix_dsc.write(data["time"])
             for another_data in data["data"]:
                 fix_dsc.write(another_data)
-            #print("------------------------------------")
-                
+#读取数据               
 def read(dsc_file_name):
     with open(dsc_file_name, 'rb') as read_file_dsc:
         read_dsc = read_file_dsc.read()
@@ -56,6 +51,7 @@ def read(dsc_file_name):
         for data in read_dsc:
             dsc_data.append(data)
         dsc_format = bytearray(dsc_data[0:4])
+        #检测dsc文件类型
         if dsc_format != ft_format:
             print("not ft dsc")
             sys.exit(0)
@@ -63,8 +59,10 @@ def read(dsc_file_name):
             dsc_data_list=[]
             dsc_id = 4
             data_id = -1
+        #读取dsc
         while dsc_id < len(dsc_data):
             opcode_id = dsc_data[dsc_id]
+            #读取时间数据并按时间分组
             if opcode_id == 1:
                 data_id += 1
                 dsc_data_time = bytearray(dsc_data[dsc_id:dsc_id+8])
@@ -72,6 +70,7 @@ def read(dsc_file_name):
                                       "time":dsc_data_time,
                                       "data":[]
                                     })
+            #写入该时间下的所有数据
             else:
                 if data_id == -1:
                     data_id += 1
