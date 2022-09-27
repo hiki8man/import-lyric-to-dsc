@@ -73,7 +73,7 @@ def main(ass_data ,ass_file):
         start_time_bytes_data = start_time_op + start_time_bytes
         #歌词指令头数据
         lyric_op = b'\x18\x00\x00\x00'
-        #旧版歌词ID
+        #歌词ID
         lyric_id_data = hex(lyric["id"])[2:]
         lyric_id_bytes = data_to_byte(lyric_id_data)
         #歌词颜色
@@ -96,7 +96,7 @@ def main(ass_data ,ass_file):
                 start_time_bytes = data_to_byte(start_time_data)
                 start_time_bytes_data = start_time_op + start_time_bytes
                 dsc_file.write(start_time_bytes_data + null_lyric_bytes_data)
-        #旧版写入pv_db
+        #写入pv_db
         with open(lyric_file_name, 'a' ,encoding='UTF-8') as lyric_file:
             if lyric["id"] < 10:
                 lyric_id = '0'*2 + str(lyric["id"])
