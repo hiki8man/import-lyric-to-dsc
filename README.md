@@ -1,5 +1,7 @@
 写来给自己用的ASS导入DSC工具，因为我找不到能导入歌词颜色的工具
 
+只支持导入FT系统的谱面，因为我本来就只用来写FT自制谱导歌词用的
+
 部分资料参考了nasty的Open-PD-Script-Editor:https://github.com/nastys/Open-PD-Script-Editor
 
 如果你不知道怎么写ASS文件，可以使用aegisub制作
