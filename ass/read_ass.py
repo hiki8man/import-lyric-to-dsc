@@ -1,11 +1,11 @@
-#指令列表
-
 def read(ass_file):
     with open(ass_file, 'r' ,encoding='UTF-8') as lyric_file:
         lyric_list = lyric_file.readlines()
         id = 0
         lyric_data = []
+        #按行读取ass文件
         for lyric_o_data in lyric_list:
+            #读取字幕行并对数据进行分组
             if lyric_o_data.find("Dialogue:") == 0:
                 list=[]
                 n = -1
@@ -13,7 +13,7 @@ def read(ass_file):
                     n = lyric_o_data[(n+1):].find(",") + n + 1
                     #print(n)
                     list.append(n)
-                #print(list)
+                #初始化列表
                 lyric_data.append({ "id":id+1, 
                                     "start":0,
                                     "end":0,
@@ -23,8 +23,10 @@ def read(ass_file):
                                     "A":255,
                                     "lyric":""
                                  })
+                #写入时间数据
                 lyric_data[id]["start"] = convert_time(lyric_o_data[list[0]+1:list[1]])
                 lyric_data[id]["end"] = convert_time(lyric_o_data[list[1]+1:list[2]])
+                #检测并写入颜色标签数据
                 if lyric_o_data[list[8] + 1:].find("{\c&H") != -1:
                     color_R_start = list[8] + lyric_o_data[list[8] + 1:].find("{\\c&H") + 6
                     color_R_end = color_R_start + 2
@@ -38,6 +40,7 @@ def read(ass_file):
                         alpha_end = alpha_start + 2
                         lyric_data[id]["A"] = 255 - int(lyric_o_data[alpha_start:alpha_end],16)
                 lyric_start = list[8] + lyric_o_data[list[8] + 1:].find("}") + 2
+                #写入歌词文本数据
                 lyric_data[id]["lyric"] = lyric_o_data[lyric_start:-1]
                 id += 1
     return lyric_data
