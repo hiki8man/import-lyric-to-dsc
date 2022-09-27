@@ -2,6 +2,8 @@
 
 只支持导入FT系统的谱面，因为我本来就只用来写FT自制谱导歌词用的
 
+没有英文版，原因同上
+
 部分资料参考了nasty的Open-PD-Script-Editor:https://github.com/nastys/Open-PD-Script-Editor
 
 如果你不知道怎么写ASS文件，可以使用aegisub制作
