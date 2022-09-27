@@ -30,8 +30,7 @@ def run(dsc_file_path ,ass_file ,merge_dsc_file_path):
     no_lyric_dsc_data_list = chart.option.delete_lyric(dsc_data_list)
     print(len(no_lyric_dsc_data_list))
     print("Done!")
-    #print(no_lyric_dsc_data_list[56])
-    #pprint.pprint(no_lyric_dsc_data_list)
+
     print("Merge dsc data......")
     merge_dsc_data_list = chart.option.merge_dsc_data(no_lyric_dsc_data_list,ass_dsc_data_list)
     #pprint.pprint(merge_dsc_data_list)
@@ -42,46 +41,3 @@ def run(dsc_file_path ,ass_file ,merge_dsc_file_path):
     print("Done!")
     print("Output:\n" + merge_dsc_file_path)
     return lyric_file_name ,ass_dsc_file_name
-
-'''
-早期没有GUI的时候写的代码
-#pyinstaller用重定位exe所在目录
-#os.chdir(os.path.dirname(sys.executable))
-#Nuitka用重定位exe所在目录
-os.chdir(sys.path[0])
-#check output folder
-exe_path = os.getcwd()
-output_path = os.path.join(exe_path,"output")
-if os.path.isdir(output_path) == False:
-    os.mkdir(output_path)
-print(output_path)
-
-dsc_file_path = input("Drop your dsc File in here then press Enter：\n")
-print("Read dsc data......")
-dsc_data_list = dsc.read(dsc_file_path)
-print("Done!")
-
-ass_file = input("Drop your ass File in here then press Enter：\n")
-print("Read ass data......")
-ass_data = read_ass.read(ass_file)
-print("Done!")
-print("Convert ass to dsc......")
-ass_dsc_file_name = ass_to_dsc.main(ass_data ,ass_file)
-print("Done!")
-
-ass_dsc_data_list = dsc.read(ass_dsc_file_name)
-no_lyric_dsc_data_list = chart.option.delete_lyric(dsc_data_list)
-#pprint.pprint(no_lyric_dsc_data_list)
-print("Merge dsc data......")
-merge_dsc_data_list = chart.option.merge_dsc_data(no_lyric_dsc_data_list,ass_dsc_data_list)
-#pprint.pprint(merge_dsc_data_list)
-print("Done!")
-
-merge_dsc_file_name = os.path.splitext(os.path.basename(dsc_file_path))[0] + "_merge.dsc"
-merge_dsc_file_path = os.path.join("output" , merge_dsc_file_name)
-print("Save merge dsc......")
-output_path_name = dsc.write(merge_dsc_data_list, merge_dsc_file_path)
-print("Done!")
-print("Output:\n" + output_path + "\\" + merge_dsc_file_name)
-os.system("pause")
-'''
