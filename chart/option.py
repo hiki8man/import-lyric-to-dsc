@@ -2,12 +2,21 @@ from pprint import pprint
 
 #修改所有HOLD到最上方图层，未使用
 def change_hold_note_show(dsc_data_list):
+    note_format = b'\x06\x00\x00\x00'
+    note_circle_hold = note_format + b'\x05\x00\x00\x00'
+    note_cross_hold  = note_format + b'\x06\x00\x00\x00'
+    note_square_hold = note_format + b'\x07\x00\x00\x00'
+    note_triangle_hold = note_format + b'\x04\x00\x00\x00'
+    
     num = 0
     fix_dsc_data_list = dsc_data_list.copy()
     for time_data in dsc_data_list:
+        #创建四个空位为HOLD NOTE预留
         list_temp1_hold = [0,0,0,0]
+        #重排序后导入用列表
         list_temp2_hold = []
         list_temp = []
+        #重排序
         for i in range(len(time_data["data"])):
             check_hold_note = time_data["data"][i][0:8]
             if check_hold_note == note_circle_hold:
@@ -20,6 +29,7 @@ def change_hold_note_show(dsc_data_list):
                 list_temp1_hold[3] = time_data["data"][i]
             else:
                 list_temp.append(time_data["data"][i])
+        #删除无用空位
         for i in list_temp1_hold:
             if i != 0:
                 list_temp2_hold.append(i)
