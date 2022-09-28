@@ -1,6 +1,5 @@
 from pprint import pprint
 
-#将所有hold图层调到最上方，未使用
 def change_hold_note_show(dsc_data_list):
     num = 0
     fix_dsc_data_list = dsc_data_list.copy()
@@ -73,7 +72,6 @@ def merge_dsc_data(input_dsc=[],input_ass=[]):
                     time_lyric = int.from_bytes(time_lyric2["time"][4:] ,byteorder='little')
                     if time_dsc > time_lyric:
                         merge_temp2.append(input_ass[i])
-                        merge_temp2.append(dsc_data)
                         i += 1
                         #print("c")
                     elif time_dsc == time_lyric:
@@ -84,6 +82,7 @@ def merge_dsc_data(input_dsc=[],input_ass=[]):
                         i += 1
                         #print("b")
                     else:
+                        merge_temp2.append(dsc_data)
                         #print("exit")
                         break
             if i == len(input_ass):
