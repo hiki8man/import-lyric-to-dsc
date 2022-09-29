@@ -89,9 +89,9 @@ def merge_dsc_data(input_dsc=[],input_ass=[]):
                         merge_temp["data"] += dsc_data["data"].copy()
                         merge_temp2.append(merge_temp)
                         i += 1
+                        break
                     else:
                         merge_temp2.append(dsc_data)
-                       
                         break
             if i == len(input_ass):
                 merge_temp2.append(dsc_data)
