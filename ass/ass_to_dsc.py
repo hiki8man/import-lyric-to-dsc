@@ -98,12 +98,8 @@ def main(ass_data ,ass_file):
                 dsc_file.write(start_time_bytes_data + null_lyric_bytes_data)
         #写入pv_db
         with open(lyric_file_name, 'a' ,encoding='UTF-8') as lyric_file:
-            if lyric["id"] < 10:
-                lyric_id = '0'*2 + str(lyric["id"])
-            elif lyric["id"] < 100:
-                lyric_id = '0' + str(lyric["id"])
-            elif lyric["id"] < 1000:
-                lyric_id = str(lyric["id"])
+            if lyric["id"] < 1000:
+                lyric_id = "{:0>3d}".format(str(lyric["id"]))
             else:
                 print("id out of range")
             lyric_file.write("pv_999.lyric." + lyric_id + "=" + lyric["lyric"] + "\n")
