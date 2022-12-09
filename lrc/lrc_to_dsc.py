@@ -71,36 +71,32 @@ def main(ass_data ,ass_file,PV_ID):
     
     for lyric in ass_data:
         #歌词开始时间
-        start_time_op = b'\x01\x00\x00\x00'
-        start_time_data = hex(lyric["start"])[2:]
-        start_time_bytes = data_to_byte(start_time_data)
-        start_time_bytes_data = start_time_op + start_time_bytes
+        time_op = b'\x01\x00\x00\x00'
+        time_data = hex(lyric["time"])[2:]
+        time_bytes = data_to_byte(time_data)
+        time_bytes_data = time_op + time_bytes
         #歌词指令头数据
         lyric_op = b'\x18\x00\x00\x00'
         #旧版歌词ID
         lyric_id_data = hex(lyric["id"])[2:]
         lyric_id_bytes = data_to_byte(lyric_id_data)
         #歌词颜色
-        lyric_color_array = [lyric["R"],lyric["G"],lyric["B"],lyric["A"]]
-        lyric_color_bytes = bytearray(lyric_color_array)
+        lyric_color_bytes = b'\xff\xff\xff\xff'
         #合并所有歌词数据
         lyric_bytes_data = lyric_op + lyric_id_bytes + lyric_color_bytes
         #写入DSC
         with open(dsc_file_name, 'ab+') as dsc_file:
-            dsc_file.write(start_time_bytes_data + lyric_bytes_data)
             #检测是否时间轴中间有无歌词数据段
-            if lyric["real_id"] < len(ass_data) and lyric["end"] != ass_data[lyric["real_id"]]["start"]:
-                start_time_data = hex(lyric["end"])[2:]
-                start_time_bytes = data_to_byte(start_time_data)
-                start_time_bytes_data = start_time_op + start_time_bytes
-                dsc_file.write(start_time_bytes_data + null_lyric_bytes_data)
-            #检测是否为最后一句歌词
-            elif lyric["real_id"] == len(ass_data):
-                start_time_data = hex(lyric["end"])[2:]
-                start_time_bytes = data_to_byte(start_time_data)
-                start_time_bytes_data = start_time_op + start_time_bytes
-                dsc_file.write(start_time_bytes_data + null_lyric_bytes_data)
+            if lyric["lyric"] == "":
+                lyric["id"] = 0
+                time_data = hex(lyric["time"])[2:]
+                time_bytes = data_to_byte(time_data)
+                time_bytes_data = time_op + time_bytes
+                dsc_file.write(time_bytes_data + null_lyric_bytes_data)
+            else:
+                dsc_file.write(time_bytes_data + lyric_bytes_data)
         #旧版写入pv_db
+        print(lyric["lyric"])
         with open(lyric_file_name, 'a' ,encoding='UTF-8') as lyric_file:
             if lyric["id"] != last_id:
                 last_id = lyric["id"]

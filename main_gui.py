@@ -2,21 +2,14 @@
 from appJar import gui
 import main
 import os
-win = gui("导入ass字幕")
-win.setSize("400x100")
-win.setResizable(False)
-win.setFont(12)
-win.addLabel("check","初始化完成",0,0,2)
-win.addLabelEntry("ass文件路径：")
-win.addLabelEntry("dsc文件路径：")
-win.addLabelEntry("导出文件路径: ")
+
 def open_file(name):
     print(name, "press")
-    if name == "ass文件...":
-        ass_path = win.openBox("选择要导入的ass文件......",fileTypes=[('ass文件', '*.ass')])
+    if name == "歌词文件...":
+        ass_path = win.openBox("选择要导入的歌词文件......",fileTypes=[('ass文件', '*.ass'),('lrc文件', '*.lrc')])
         if ass_path != "":
             print(ass_path)
-            win.setEntry("ass文件路径：",ass_path)
+            win.setEntry("歌词文件路径：",ass_path)
     elif name == "dsc文件...":
         dsc_path = win.openBox("选择要导入的dsc文件......",fileTypes=[('dsc文件', '*.dsc')])
         if dsc_path != "":
@@ -33,12 +26,18 @@ def open_file(name):
                 win.setEntry("导出文件路径: ",dsc_path)
             else:
                 win.errorBox("错误","导出的dsc文件名不能与导入的dsc文件名重复！")
-    elif name == "导入ass字幕":
-        ass_path = win.getEntry("ass文件路径：")
+    elif name == "导入歌词字幕":
+        ass_path = win.getEntry("歌词文件路径：")
         dsc_path = win.getEntry("dsc文件路径：")
         save_path = win.getEntry("导出文件路径: ")
+        PV_ID = win.getSpinBox("PV_ID")
+        PV_ID = "{:0>3}".format(str(PV_ID))
+        if ass_path[-3:] == "ass":
+            color_lyric = True
+        elif ass_path[-3:] == "lrc":
+            color_lyric = False
         try:
-            lyric_file_name ,ass_dsc_file_name = main.run(dsc_path,ass_path,save_path)
+            lyric_file_name ,ass_dsc_file_name = main.run(dsc_path,ass_path,save_path,PV_ID,color_lyric)
             win.setLabel("check","导入成功")
             os.startfile(lyric_file_name)
             print(lyric_file_name)
@@ -49,8 +48,24 @@ def open_file(name):
         os.remove(ass_dsc_file_name)
         os.remove(lyric_file_name)
         os.removedirs("temp")
-win.addButton("ass文件...",open_file,1,1)
-win.addButton("dsc文件...",open_file,2,1)
-win.addButton("保存到.....",open_file,3,1)
-win.addButton("导入ass字幕",open_file,4,0,2)
+
+win = gui("导入歌词字幕")
+win.setSize("400x100")
+win.setResizable(False)
+win.setFont(12)
+
+win.addLabel("check","初始化完成",0,0,3)
+win.addLabelEntry("歌词文件路径：",1,0,2)
+win.addLabelEntry("dsc文件路径：",2,0,2)
+win.addLabelEntry("导出文件路径: ",3,0,2)
+
+win.addButton("歌词文件...",open_file,1,2)
+win.addButton("dsc文件...",open_file,2,2)
+win.addButton("保存到.....",open_file,3,2)
+win.addButton("导入歌词字幕",open_file,4,2)
+
+win.addLabel("use_PV_ID","PV_ID: ",4,0)
+win.addSpinBoxRange("PV_ID", 1, 999,4,1)
+win.setSpinBox("PV_ID", 999, callFunction=True)
+
 win.go()

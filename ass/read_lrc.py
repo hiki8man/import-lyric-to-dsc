@@ -40,29 +40,16 @@ def read(ass_file):
                         alpha_end = alpha_start + 2
                         lyric_data[id]["A"] = 255 - int(lyric_o_data[alpha_start:alpha_end],16)
                 lyric_start = list[8] + lyric_o_data[list[8] + 1:].find("}") + 2
-                lyric_data[id]["lyric"] = lyric_o_data[lyric_start:]
-                #空歌词跳过
-                if lyric_data[id]["lyric"] == "\n" or lyric_data[id]["lyric"] == "":
-                    lyric_data[id]["id"] = 0
-                #第一句非空歌词标号
-                elif id == 0:
+                lyric_data[id]["lyric"] = lyric_o_data[lyric_start:-1]
+                #检测当前歌词是否与上一句歌词重复
+                #第一句歌词时跳过
+                if id == 0:
                     lyric_data[id]["id"] = 1
+                #根据情况设置ID值，摆烂直接浅复制值，反正小工具要啥效率
+                elif lyric_data[id]["lyric"] == lyric_data[id-1]["lyric"]:
+                    lyric_data[id]["id"] = lyric_data[id-1]["id"]
                 else:
-                    #遍历寻找非空歌词id
-                    for i in range(1,id+1):
-                        #寻找没有空歌词的部分
-                        if lyric_data[id-i]["lyric"] != "\n":
-                            #检测当前歌词是否与上一句歌词重复
-                            #根据情况设置ID值，摆烂直接浅复制值，反正小工具要啥效率
-                            if lyric_data[id]["lyric"] == lyric_data[id-i]["lyric"]:
-                                lyric_data[id]["id"] = lyric_data[id-i]["id"]
-                                break
-                            else:
-                                lyric_data[id]["id"] = lyric_data[id-i]["id"] + 1
-                                break
-                        #前面全是空歌词则赋予初始值1
-                        elif lyric_data[id-i]["lyric"] == "\n" and (id - i) == 0:
-                            lyric_data[id]["id"] = 1
+                    lyric_data[id]["id"] = lyric_data[id-1]["id"] + 1
                 id += 1
     return lyric_data
 
