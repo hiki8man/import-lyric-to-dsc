@@ -50,10 +50,8 @@ def main(ass_data ,ass_file,PV_ID):
     #定义导出的歌词DSC等文件路径
     song_name = os.path.splitext(os.path.basename(ass_file))[0]
     dsc_file_name = song_name + "_lyric.dsc"
-    #dsc_file_name = os.path.join("output",dsc_file_name)
     dsc_file_name = os.path.join("temp",dsc_file_name)
     lyric_file_name = song_name + "_lyric_db.txt"
-    #lyric_file_name = os.path.join("output",lyric_file_name)
     lyric_file_name = os.path.join("temp",lyric_file_name)
     #写入FT谱面文件头数据
     with open(dsc_file_name, 'wb+') as dsc_file:
@@ -104,14 +102,6 @@ def main(ass_data ,ass_file,PV_ID):
         with open(lyric_file_name, 'a' ,encoding='UTF-8') as lyric_file:
             if lyric["id"] != last_id:
                 last_id = lyric["id"]
-                '''
-                if lyric["id"] < 10:
-                    lyric_id = '0'*2 + str(lyric["id"])
-                elif lyric["id"] < 100:
-                    lyric_id = '0' + str(lyric["id"])
-                elif lyric["id"] < 1000:
-                    lyric_id = str(lyric["id"])
-                '''
                 if lyric["id"] == 0:
                     print("Null Lyric")
                 elif lyric["id"] < 1000:
