@@ -1,12 +1,16 @@
 #指令列表
 
-def read(lrc_file):
+def read(lrc_file,is_lrc_flie):
     with open(lrc_file, 'r' ,encoding='UTF-8') as lyric_file:
         lyric_list = lyric_file.readlines()
         id = 0
         lyric_data = []
+        is_lrc_lyric = 1
         for lyric_o_data in lyric_list:
-            if lyric_o_data[1:3].isdigit() == True:
+            print(lyric_o_data.find("["))
+            if is_lrc_flie == -1:
+                is_lrc_lyric = 0
+            if lyric_o_data[is_lrc_lyric:is_lrc_lyric+2].isdigit() == True:
                 #使用逗号分隔 ass文件 不同数据部分
                 #print(list)
                 #构建数据结构
@@ -14,11 +18,14 @@ def read(lrc_file):
                                     "time":0,
                                     "lyric":""
                                  })
-                print(lyric_o_data[1:lyric_o_data.find("]")])
-                lyric_data[id]["time"] = convert_time(lyric_o_data[1:lyric_o_data.find("]")])
-                lyric_data[id]["lyric"] = lyric_o_data[10:]
+                if is_lrc_lyric == 1:
+                    lyric_data[id]["time"] = convert_time(lyric_o_data[1:lyric_o_data.find("]")])
+                    lyric_data[id]["lyric"] = lyric_o_data[lyric_o_data.find("]")+1:]
+                elif is_lrc_lyric == 0:
+                    lyric_data[id]["time"] = convert_time_PPD(lyric_o_data[1:lyric_o_data.find(":")])
+                    lyric_data[id]["lyric"] = lyric_o_data[lyric_o_data.find(":")+1:]
                 #空歌词跳过
-                if lyric_data[id]["lyric"] == "\n":
+                if lyric_data[id]["lyric"] == "\n" or lyric_data[id]["lyric"] == "":
                     lyric_data[id]["id"] = 0
                 #第一句非空歌词标号
                 elif id == 0:
@@ -48,4 +55,10 @@ def convert_time(time):
     time_s = float(time[3:])
     time_ms = time_s * 100 * 10
     time = int(time_m + time_ms) * 100
+    return time
+
+def convert_time_PPD(time):
+    time_s = float(time[3:])
+    time_ms = time_s * 100 * 10
+    time = int(time_ms) * 100
     return time

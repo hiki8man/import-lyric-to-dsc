@@ -6,7 +6,7 @@ import os
 def open_file(name):
     print(name, "press")
     if name == "歌词文件...":
-        ass_path = win.openBox("选择要导入的歌词文件......",fileTypes=[('ass文件', '*.ass'),('lrc文件', '*.lrc')])
+        ass_path = win.openBox("选择要导入的歌词文件......",fileTypes=[('ass、lrc或ppd歌词文件', ['*.ass','*.lrc','kasi.txt'])])
         if ass_path != "":
             print(ass_path)
             win.setEntry("歌词文件路径：",ass_path)
@@ -33,9 +33,11 @@ def open_file(name):
         PV_ID = win.getSpinBox("PV_ID")
         PV_ID = "{:0>3}".format(str(PV_ID))
         if ass_path[-3:] == "ass":
-            color_lyric = True
+            color_lyric = 1
         elif ass_path[-3:] == "lrc":
-            color_lyric = False
+            color_lyric = 0
+        elif ass_path[-8:] == "kasi.txt":
+            color_lyric = -1
         try:
             lyric_file_name ,ass_dsc_file_name = main.run(dsc_path,ass_path,save_path,PV_ID,color_lyric)
             win.setLabel("check","导入成功")

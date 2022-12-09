@@ -86,20 +86,20 @@ def main(ass_data ,ass_file,PV_ID):
         lyric_bytes_data = lyric_op + lyric_id_bytes + lyric_color_bytes
         #写入DSC
         with open(dsc_file_name, 'ab+') as dsc_file:
-            #检测是否时间轴中间有无歌词数据段
-            if lyric["lyric"] == "":
-                lyric["id"] = 0
-                time_data = hex(lyric["time"])[2:]
-                time_bytes = data_to_byte(time_data)
-                time_bytes_data = time_op + time_bytes
-                dsc_file.write(time_bytes_data + null_lyric_bytes_data)
-            else:
-                dsc_file.write(time_bytes_data + lyric_bytes_data)
-        #写入pv_db
+            dsc_file.write(time_bytes_data + lyric_bytes_data)
+        #旧版写入pv_db
         print(lyric["lyric"])
         with open(lyric_file_name, 'a' ,encoding='UTF-8') as lyric_file:
             if lyric["id"] != last_id:
                 last_id = lyric["id"]
+                '''
+                if lyric["id"] < 10:
+                    lyric_id = '0'*2 + str(lyric["id"])
+                elif lyric["id"] < 100:
+                    lyric_id = '0' + str(lyric["id"])
+                elif lyric["id"] < 1000:
+                    lyric_id = str(lyric["id"])
+                '''
                 if lyric["id"] == 0:
                     print("Null Lyric")
                 elif lyric["id"] < 1000:
