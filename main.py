@@ -4,6 +4,7 @@ from lrc import lrc_to_dsc, read_lrc
 import dsc
 import chart.option
 
+
 def run(dsc_file_path ,lyric_file ,merge_dsc_file_path,PV_ID,color_lyric):
     os.chdir(sys.path[0])
     #check output folder
@@ -18,16 +19,20 @@ def run(dsc_file_path ,lyric_file ,merge_dsc_file_path,PV_ID,color_lyric):
     print(len(dsc_data_list))
     print("Done!")
 
+    print("Check music play offset......")
+    lyric_offset = chart.option.get_music_offset(dsc_data_list)
+    print("Done!")
+
     if color_lyric == 1:
         print("Read ass data......")
-        ass_data = read_ass.read(lyric_file)
+        ass_data = read_ass.read(lyric_file,lyric_offset)
         print("Done!")
         print("Convert ass to dsc......")
         lyric_dsc_file_name ,lyric_file_name = ass_to_dsc.main(ass_data ,lyric_file,PV_ID)
         print("Done!")
     else:
         print("Read lrc data......")
-        lrc_data = read_lrc.read(lyric_file , color_lyric)
+        lrc_data = read_lrc.read(lyric_file , color_lyric,lyric_offset)
         print("Done!")
         print("Convert lrc to dsc......")
         lyric_dsc_file_name ,lyric_file_name = lrc_to_dsc.main(lrc_data ,lyric_file,PV_ID)

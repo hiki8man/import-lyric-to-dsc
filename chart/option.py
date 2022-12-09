@@ -1,3 +1,5 @@
+from pprint import pprint
+
 def change_hold_note_show(dsc_data_list):
     num = 0
     fix_dsc_data_list = dsc_data_list.copy()
@@ -7,13 +9,13 @@ def change_hold_note_show(dsc_data_list):
         list_temp = []
         for i in range(len(time_data["data"])):
             check_hold_note = time_data["data"][i][0:8]
-            if check_hold_note == note_circle_hold:
+            if check_hold_note == op_note_circle_hold:
                 list_temp1_hold[0] = time_data["data"][i]
-            elif check_hold_note == note_cross_hold:
+            elif check_hold_note == op_note_cross_hold:
                 list_temp1_hold[1] = time_data["data"][i]
-            elif check_hold_note == note_square_hold:
+            elif check_hold_note == op_note_square_hold:
                 list_temp1_hold[2] = time_data["data"][i]
-            elif check_hold_note == note_triangle_hold:
+            elif check_hold_note == op_note_triangle_hold:
                 list_temp1_hold[3] = time_data["data"][i]
             else:
                 list_temp.append(time_data["data"][i])
@@ -48,6 +50,23 @@ def delete_lyric(dsc_data_list):
             fix_dsc_data_list.append(write_data)
     return fix_dsc_data_list
     
+def get_music_offset(dsc_data_list):
+    op_music_play = b'\x19\x00\x00\x00'
+    music_play_offset = -1
+    #遍历查询
+    for data in dsc_data_list:
+        #寻找music_play指令
+        for i in range(len(data["data"])):
+            if data["data"][i] == op_music_play:
+                #转换为int
+                music_play_offset = int.from_bytes(data["time"][4:] ,byteorder='little')
+                break
+        if music_play_offset != -1:
+            break
+    if music_play_offset == -1:
+        music_play_offset = 0
+    print(music_play_offset)
+    return music_play_offset
 
 def merge_dsc_data(input_dsc=[],input_ass=[]):
     merge_dsc_data_list = []
@@ -59,26 +78,32 @@ def merge_dsc_data(input_dsc=[],input_ass=[]):
             time_lyric = int.from_bytes(input_ass[i]["time"][4:] ,byteorder='little')
             if time_dsc < time_lyric:
                 merge_temp2.append(dsc_data)
+                #print("a")
             else:
                 for time_lyric2 in input_ass[i:]:
                     time_lyric = int.from_bytes(time_lyric2["time"][4:] ,byteorder='little')
                     if time_dsc > time_lyric:
                         merge_temp2.append(input_ass[i])
                         i += 1
+                        #print("c")
                     elif time_dsc == time_lyric:
                         merge_temp = (input_ass[i])
                         #merge_temp.append(input_ass[i])
                         merge_temp["data"] += dsc_data["data"].copy()
                         merge_temp2.append(merge_temp)
                         i += 1
+                        #print("b")
                         break
                     else:
                         merge_temp2.append(dsc_data)
+                        #print("exit")
                         break
             if i == len(input_ass):
                 merge_temp2.append(dsc_data)
+                #print("e")
         else:
             merge_temp2.append(dsc_data)
+            #print("d")
     for b in merge_temp2:
         merge_dsc_data_list.append(b)
     return merge_dsc_data_list

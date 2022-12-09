@@ -1,10 +1,27 @@
 #指令列表
+#import op_list
 from chart import  op_list
 list = op_list.list
 common_list = {}
 for common in list:
    common_list.update({common:list[common]})
    
+#写入思路1（使用字符）
+#byte_val = bytes(chr(1),encoding="latin1")
+#dsc_ft = b'\x21\x09\x05\x14'
+#test=b'\x00'
+#bitout = open('test.dsc', 'wb')
+#bitout.write(dsc_ft+byte_val+test*7)
+#bitout.close
+
+#写入思路2（使用字节数组写入）
+#byte_val = bytes(bytearray([1,2,3,16]))
+#dsc_ft = b'\x21\x09\x05\x14'
+#test=b'\x00'
+#bitout = open('test.dsc', 'wb')
+#print(byte_val)
+#bitout.write(dsc_ft+byte_val+test*7)
+#bitout.close
 
 ft_format = b'\x21\x09\x05\x14'
 note_format = b'\x06\x00\x00\x00'
@@ -46,6 +63,7 @@ def read(dsc_file_name):
             opcode_id = dsc_data[dsc_id]
             if opcode_id == 1:
                 data_id += 1
+                #将指令与指令对应的内容同时保存至列表
                 dsc_data_time = bytearray(dsc_data[dsc_id:dsc_id+8])
                 dsc_data_list.append({
                                       "time":dsc_data_time,

@@ -1,6 +1,6 @@
 #指令列表
 
-def read(ass_file):
+def read(ass_file, lyric_offset):
     with open(ass_file, 'r' ,encoding='UTF-8') as lyric_file:
         lyric_list = lyric_file.readlines()
         id = 0
@@ -25,8 +25,8 @@ def read(ass_file):
                                     "A":255,
                                     "lyric":""
                                  })
-                lyric_data[id]["start"] = convert_time(lyric_o_data[list[0]+1:list[1]])
-                lyric_data[id]["end"] = convert_time(lyric_o_data[list[1]+1:list[2]])
+                lyric_data[id]["start"] = convert_time(lyric_o_data[list[0]+1:list[1]]) + lyric_offset
+                lyric_data[id]["end"] = convert_time(lyric_o_data[list[1]+1:list[2]]) + lyric_offset
                 if lyric_o_data[list[8] + 1:].find("{\c&H") != -1:
                     color_R_start = list[8] + lyric_o_data[list[8] + 1:].find("{\\c&H") + 6
                     color_R_end = color_R_start + 2

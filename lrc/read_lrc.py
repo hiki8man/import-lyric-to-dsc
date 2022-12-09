@@ -1,16 +1,14 @@
 #指令列表
 
-def read(lrc_file,is_lrc_flie):
+def read(lrc_file,is_lrc_flie,lyric_offset):
     with open(lrc_file, 'r' ,encoding='UTF-8') as lyric_file:
         lyric_list = lyric_file.readlines()
         id = 0
         lyric_data = []
-        is_lrc_lyric = 1
+        is_lrc_lyric = is_lrc_flie + 1
         for lyric_o_data in lyric_list:
-            print(lyric_o_data.find("["))
-            if is_lrc_flie == -1:
-                is_lrc_lyric = 0
-            if lyric_o_data[is_lrc_lyric:is_lrc_lyric+2].isdigit() == True:
+            print(lyric_o_data)
+            if lyric_o_data[is_lrc_lyric:is_lrc_lyric+1].isdigit() == True:
                 #使用逗号分隔 ass文件 不同数据部分
                 #print(list)
                 #构建数据结构
@@ -19,11 +17,14 @@ def read(lrc_file,is_lrc_flie):
                                     "lyric":""
                                  })
                 if is_lrc_lyric == 1:
-                    lyric_data[id]["time"] = convert_time(lyric_o_data[1:lyric_o_data.find("]")])
+                    print("lrc Type")
+                    lyric_data[id]["time"] = convert_time(lyric_o_data[1:lyric_o_data.find("]")]) + lyric_offset
                     lyric_data[id]["lyric"] = lyric_o_data[lyric_o_data.find("]")+1:]
                 elif is_lrc_lyric == 0:
-                    lyric_data[id]["time"] = convert_time_PPD(lyric_o_data[1:lyric_o_data.find(":")])
+                    print("PPD Type")
+                    lyric_data[id]["time"] = convert_time_PPD(lyric_o_data[:lyric_o_data.find(":")]) + lyric_offset
                     lyric_data[id]["lyric"] = lyric_o_data[lyric_o_data.find(":")+1:]
+                print(lyric_data[id]["lyric"])
                 #空歌词跳过
                 if lyric_data[id]["lyric"] == "\n" or lyric_data[id]["lyric"] == "":
                     lyric_data[id]["id"] = 0
@@ -46,7 +47,7 @@ def read(lrc_file,is_lrc_flie):
                         #前面全是空歌词则赋予初始值1
                         elif lyric_data[id-i]["lyric"] == "\n" and (id - i) == 0:
                             lyric_data[id]["id"] = 1
-                print(lyric_data[id]["id"])
+
                 id += 1
     return lyric_data
 
@@ -58,7 +59,7 @@ def convert_time(time):
     return time
 
 def convert_time_PPD(time):
-    time_s = float(time[3:])
+    time_s = float(time)
     time_ms = time_s * 100 * 10
     time = int(time_ms) * 100
     return time

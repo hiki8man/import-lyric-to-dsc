@@ -92,14 +92,6 @@ def main(ass_data ,ass_file,PV_ID):
         with open(lyric_file_name, 'a' ,encoding='UTF-8') as lyric_file:
             if lyric["id"] != last_id:
                 last_id = lyric["id"]
-                '''
-                if lyric["id"] < 10:
-                    lyric_id = '0'*2 + str(lyric["id"])
-                elif lyric["id"] < 100:
-                    lyric_id = '0' + str(lyric["id"])
-                elif lyric["id"] < 1000:
-                    lyric_id = str(lyric["id"])
-                '''
                 if lyric["id"] == 0:
                     print("Null Lyric")
                 elif lyric["id"] < 1000:
