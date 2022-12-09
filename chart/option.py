@@ -1,5 +1,3 @@
-from pprint import pprint
-
 def change_hold_note_show(dsc_data_list):
     num = 0
     fix_dsc_data_list = dsc_data_list.copy()
@@ -25,12 +23,7 @@ def change_hold_note_show(dsc_data_list):
         list_temp.extend(list_temp2_hold)
         if len(list_temp2_hold) != 0:
             fix_dsc_data_list[num]["data"] = list_temp.copy()
-        #pprint.pprint(fix_dsc_data_list)
-        #print("------------------------------------")
         num += 1
-        #pprint.pprint(time_data)
-    #print("------------------------------------")
-    #pprint.pprint(fix_dsc_data_list)
     return fix_dsc_data_list
     
 def delete_lyric(dsc_data_list):
@@ -66,32 +59,26 @@ def merge_dsc_data(input_dsc=[],input_ass=[]):
             time_lyric = int.from_bytes(input_ass[i]["time"][4:] ,byteorder='little')
             if time_dsc < time_lyric:
                 merge_temp2.append(dsc_data)
-                #print("a")
             else:
                 for time_lyric2 in input_ass[i:]:
                     time_lyric = int.from_bytes(time_lyric2["time"][4:] ,byteorder='little')
                     if time_dsc > time_lyric:
                         merge_temp2.append(input_ass[i])
                         i += 1
-                        #print("c")
                     elif time_dsc == time_lyric:
                         merge_temp = (input_ass[i])
                         #merge_temp.append(input_ass[i])
                         merge_temp["data"] += dsc_data["data"].copy()
                         merge_temp2.append(merge_temp)
                         i += 1
-                        #print("b")
                         break
                     else:
                         merge_temp2.append(dsc_data)
-                        #print("exit")
                         break
             if i == len(input_ass):
                 merge_temp2.append(dsc_data)
-                #print("e")
         else:
             merge_temp2.append(dsc_data)
-            #print("d")
     for b in merge_temp2:
         merge_dsc_data_list.append(b)
     return merge_dsc_data_list
