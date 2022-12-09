@@ -2,7 +2,9 @@
 
 只支持导入FT系统的谱面，本来这个程序就只用来写FT自制谱导歌词用的
 
-~~没有英文版，原因同上~~现在有英文版了，至于能不能看懂我就不知道了（
+~~没有英文版，原因同上~~
+
+现在有英文版了，至于能不能看懂我就不知道了（
 
 部分资料参考了nasty的Open-PD-Script-Editor:https://github.com/nastys/Open-PD-Script-Editor
 
