@@ -98,7 +98,7 @@ def main(ass_data ,ass_file,PV_ID):
                 start_time_bytes = data_to_byte(start_time_data)
                 start_time_bytes_data = start_time_op + start_time_bytes
                 dsc_file.write(start_time_bytes_data + null_lyric_bytes_data)
-        #旧版写入pv_db
+        #写入pv_db
         with open(lyric_file_name, 'a' ,encoding='UTF-8') as lyric_file:
             if lyric["id"] != last_id:
                 last_id = lyric["id"]
