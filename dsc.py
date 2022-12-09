@@ -1,27 +1,10 @@
 #指令列表
-#import op_list
 from chart import  op_list
 list = op_list.list
 common_list = {}
 for common in list:
    common_list.update({common:list[common]})
    
-#写入思路1（使用字符）
-#byte_val = bytes(chr(1),encoding="latin1")
-#dsc_ft = b'\x21\x09\x05\x14'
-#test=b'\x00'
-#bitout = open('test.dsc', 'wb')
-#bitout.write(dsc_ft+byte_val+test*7)
-#bitout.close
-
-#写入思路2（使用字节数组写入）
-#byte_val = bytes(bytearray([1,2,3,16]))
-#dsc_ft = b'\x21\x09\x05\x14'
-#test=b'\x00'
-#bitout = open('test.dsc', 'wb')
-#print(byte_val)
-#bitout.write(dsc_ft+byte_val+test*7)
-#bitout.close
 
 ft_format = b'\x21\x09\x05\x14'
 note_format = b'\x06\x00\x00\x00'
@@ -40,14 +23,10 @@ def write(dsc_data_list, dsc_file_path):
         fix_dsc.write(ft_format)
         print(len(dsc_data_list))
         for data in dsc_data_list:
-            #print("time")
-            #print(data["time"])
-            #print("------------------------------------")
             if data["time"] != None: 
                 fix_dsc.write(data["time"])
             for another_data in data["data"]:
                 fix_dsc.write(another_data)
-            #print("------------------------------------")
                 
 def read(dsc_file_name):
     with open(dsc_file_name, 'rb') as read_file_dsc:
@@ -84,7 +63,3 @@ def read(dsc_file_name):
                 dsc_data_list[data_id]["data"].append(dsc_data_another)
             dsc_id += (common_list[opcode_id]["len"] + 1) * 4
     return dsc_data_list
-        #print("------------------------------------")
-        #fix_dsc_data_list = fix_hold_note_show(dsc_data_list)
-        #pprint.pprint(fix_dsc_data_list)
-        #write_to_dsc(fix_dsc_data_list ,dsc_file_name)
