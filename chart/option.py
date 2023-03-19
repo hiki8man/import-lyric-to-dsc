@@ -7,6 +7,12 @@ def change_hold_note_show(dsc_data_list):
         list_temp1_hold = [0,0,0,0]
         list_temp2_hold = []
         list_temp = []
+        
+    op_note_circle_hold   = b'\x06\x00\x00\x00\x05\x00\x00\x00'
+    op_note_cross_hold    = b'\x06\x00\x00\x00\x06\x00\x00\x00'
+    op_note_square_hold   = b'\x06\x00\x00\x00\x07\x00\x00\x00'
+    op_note_triangle_hold = b'\x06\x00\x00\x00\x04\x00\x00\x00'
+        
         for i in range(len(time_data["data"])):
             check_hold_note = time_data["data"][i][0:8]
             if check_hold_note == op_note_circle_hold:
