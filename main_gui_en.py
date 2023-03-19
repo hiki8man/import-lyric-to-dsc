@@ -31,7 +31,8 @@ def open_file(name):
         dsc_path = win.getEntry("DSC Path:")
         save_path = win.getEntry("Output Path:")
         PV_ID = win.getSpinBox("PV_ID")
-        PV_ID = "{:0>3}".format(str(PV_ID))
+        if len(PV_ID) < 3:
+            PV_ID = "{:0>3}".format(str(PV_ID))
         if ass_path[-3:] == "ass":
             color_lyric = 1
         elif ass_path[-3:] == "lrc":
@@ -67,7 +68,7 @@ win.addButton("Save as...",open_file,3,2)
 win.addButton("Import to DSC",open_file,4,2)
 
 win.addLabel("use_PV_ID","PV_ID: ",4,0)
-win.addSpinBoxRange("PV_ID", 1, 999,4,1)
+win.addSpinBoxRange("PV_ID", 1, 9999,4,1)
 win.setSpinBox("PV_ID", 900, callFunction=True)
 
 win.go()

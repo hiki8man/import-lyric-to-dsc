@@ -31,7 +31,8 @@ def open_file(name):
         dsc_path = win.getEntry("dsc文件路径：")
         save_path = win.getEntry("导出文件路径: ")
         PV_ID = win.getSpinBox("PV_ID")
-        PV_ID = "{:0>3}".format(str(PV_ID))
+        if len(PV_ID) < 3:
+            PV_ID = "{:0>3}".format(str(PV_ID))
         if ass_path[-3:] == "ass":
             color_lyric = 1
         elif ass_path[-3:] == "lrc":
@@ -67,7 +68,7 @@ win.addButton("保存到.....",open_file,3,2)
 win.addButton("导入歌词字幕",open_file,4,2)
 
 win.addLabel("use_PV_ID","PV_ID: ",4,0)
-win.addSpinBoxRange("PV_ID", 1, 999,4,1)
-win.setSpinBox("PV_ID", 999, callFunction=True)
+win.addSpinBoxRange("PV_ID", 1, 9999,4,1)
+win.setSpinBox("PV_ID", 900, callFunction=True)
 
 win.go()

@@ -108,7 +108,7 @@ def main(ass_data ,ass_file,PV_ID):
                     print("Null Lyric")
                 elif lyric["id"] < 1000:
                     lyric_id = "{:0>3}".format(str(lyric["id"]))
-                    lyric_file.write("pv_" + PV_ID + ".lyric." + lyric_id + "=" + lyric["lyric"])
+                    lyric_file.write(f"pv_{PV_ID}.lyric.{lyric_id}={lyric['lyric']}")
                 else:
                     print("id out of range")
     return dsc_file_name ,lyric_file_name
