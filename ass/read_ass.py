@@ -28,10 +28,10 @@ def read(ass_file, lyric_offset):
                 lyric_data[id]["start"] = convert_time(lyric_o_data[list[0]+1:list[1]]) + lyric_offset
                 lyric_data[id]["end"] = convert_time(lyric_o_data[list[1]+1:list[2]]) + lyric_offset
                 if lyric_o_data[list[8] + 1:].find("{\c&H") != -1:
-                    color_R_start = list[8] + lyric_o_data[list[8] + 1:].find("{\\c&H") + 6
-                    color_R_end = color_R_start + 2
-                    color_G_end = color_R_end + 2
-                    color_B_end = color_G_end + 2
+                    color_B_start = list[8] + lyric_o_data[list[8] + 1:].find("{\\c&H") + 6
+                    color_B_end = color_B_start + 2
+                    color_G_end = color_B_end + 2
+                    color_R_end = color_G_end + 2
                     lyric_data[id]["R"] = int(lyric_o_data[color_R_start:color_R_end],16)
                     lyric_data[id]["G"] = int(lyric_o_data[color_R_end:color_G_end],16)
                     lyric_data[id]["B"] = int(lyric_o_data[color_G_end:color_B_end],16)
