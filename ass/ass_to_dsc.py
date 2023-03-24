@@ -81,7 +81,7 @@ def main(ass_data ,ass_file,PV_ID):
         lyric_id_data = hex(lyric["id"])[2:]
         lyric_id_bytes = data_to_byte(lyric_id_data)
         #歌词颜色
-        lyric_color_array = [lyric["R"],lyric["G"],lyric["B"],lyric["A"]]
+        lyric_color_array = [lyric["B"],lyric["G"],lyric["R"],lyric["A"]]
         lyric_color_bytes = bytearray(lyric_color_array)
         #合并所有歌词数据
         lyric_bytes_data = lyric_op + lyric_id_bytes + lyric_color_bytes
