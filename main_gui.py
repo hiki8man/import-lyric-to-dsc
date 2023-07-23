@@ -45,13 +45,12 @@ def open_file(name):
             color_lyric = 0
         elif ass_path[-8:] == "kasi.txt":
             color_lyric = -1
-        
-        if ass_path == "":
-            win.errorBox("错误","DSC路径为空！")
-        elif dsc_path == "":
-            win.errorBox("错误","歌词文件路径为空！")
-        elif save_path == "":
-            win.errorBox("错误","保存路径为空！")
+        if ass_path == "" or Path(ass_path).exists() == False:
+            win.errorBox("错误","歌词文件路径错误！")
+        elif dsc_path == "" or Path(dsc_path).exists() == False:
+            win.errorBox("错误","DSC文件路径错误！")
+        elif save_path == "" or Path(save_path).exists() == False:
+            win.errorBox("错误","导出文件路径错误！")
         else:
             try:
                 lyric_list ,lyric_dsc_file_name = main.run(dsc_path,ass_path,save_path,PV_ID,color_lyric)

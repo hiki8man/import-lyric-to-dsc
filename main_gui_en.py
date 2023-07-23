@@ -1,7 +1,8 @@
 #coding:utf-8
 from appJar import gui
 import main
-import os
+from pathlib import Path
+import traceback
 
 def open_file(name):
     print(name, "press")
@@ -30,32 +31,61 @@ def open_file(name):
         ass_path = win.getEntry("Lyric Path:")
         dsc_path = win.getEntry("DSC Path:")
         save_path = win.getEntry("Output Path:")
+
+        use_lyric_en = win.getCheckBox("use Lyric_en")
+        add_mega_db = win.getCheckBox("auto add empty Lyric db")
+
         PV_ID = win.getSpinBox("PV_ID")
         if len(PV_ID) < 3:
             PV_ID = "{:0>3}".format(str(PV_ID))
+
         if ass_path[-3:] == "ass":
             color_lyric = 1
         elif ass_path[-3:] == "lrc":
             color_lyric = 0
         elif ass_path[-8:] == "kasi.txt":
             color_lyric = -1
-        try:
-            lyric_file_name ,ass_dsc_file_name = main.run(dsc_path,ass_path,save_path,PV_ID,color_lyric)
-            win.setLabel("check","Done!")
-            os.startfile(lyric_file_name)
-            print(lyric_file_name)
-            win.infoBox("Tip","Please copy the lyrics db in the pop-up txt file")
-        except Exception as r:
-            print(r)
-            win.setLabel("check","Error")
-        os.remove(ass_dsc_file_name)
-        os.remove(lyric_file_name)
-        os.removedirs("temp")
+
+        if ass_path == "" or Path(ass_path).exists() == False:
+            win.errorBox("Error","Lyric path error!")
+        elif dsc_path == "" or Path(dsc_path).exists() == False:
+            win.errorBox("Error","DSC path error!")
+        elif save_path == "" or Path(save_path).exists() == False:
+            win.errorBox("Error","Output Path error!")
+        else:
+            try:
+                lyric_list ,lyric_dsc_file_name = main.run(dsc_path,ass_path,save_path,PV_ID,color_lyric)
+                win.setLabel("check","Done!")
+
+                lyric_file_name = Path(ass_path).stem
+                lyric_temp = ""
+                lyric_en_temp = ""
+
+                for lyric in lyric_list:
+                    if use_lyric_en:
+                        lyric_en_temp += f"pv_{PV_ID}.lyric_en.{lyric['id']}={lyric['lyric']}\n"
+                        if add_mega_db:
+                            lyric_temp += f"pv_{PV_ID}.lyric.{lyric['id']}=\n"
+                    else:
+                        lyric_temp += f"pv_{PV_ID}.lyric.{lyric['id']}={lyric['lyric']}\n"
+                        if add_mega_db:
+                            lyric_en_temp += f"pv_{PV_ID}.lyric_en.{lyric['id']}=\n"
+                lyric_temp = f"#{lyric_file_name}\n{lyric_temp}{lyric_en_temp}"
+                win.clearTextArea("t1")
+                win.setTextArea("t1", lyric_temp, end=False, callFunction=False)
+                win.infoBox("Tip","Please copy the lyrics db in the pop-up windows")
+            except:
+                r = traceback.format_exc()
+                win.errorBox("Error",f"Unknow error!\n\n{r}")
+                win.setLabel("check","Error")
+            else:
+                Path(lyric_dsc_file_name).unlink()
+                Path("temp").rmdir()
+
 
 win = gui("Import to DSC")
-win.setSize("400x100")
+win.setSize("400x200")
 win.setResizable(False)
-win.setFont(12)
 
 win.addLabel("check","Lyric Import Tool",0,0,3)
 win.addLabelEntry("Lyric Path:",1,0,2)
@@ -70,5 +100,16 @@ win.addButton("Import to DSC",open_file,4,2)
 win.addLabel("use_PV_ID","PV_ID: ",4,0)
 win.addSpinBoxRange("PV_ID", 1, 9999,4,1)
 win.setSpinBox("PV_ID", 900, callFunction=True)
+
+win.startLabelFrame("MegaMix+ Option",5,0,3)
+win.addCheckBox("use Lyric_en",6,0,3)
+win.addCheckBox("auto add empty Lyric db",7,0,3)
+win.stopLabelFrame()
+
+win.startSubWindow("Please copy the lyrics db in the pop-up windows")
+win.emptyCurrentContainer()
+win.setSize("600x800")
+win.addScrolledTextArea("t1")
+win.stopSubWindow()
 
 win.go()
