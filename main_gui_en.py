@@ -3,6 +3,7 @@ from appJar import gui
 import main
 from pathlib import Path
 import traceback
+import os
 
 def open_file(name):
     print(name, "press")
@@ -71,14 +72,17 @@ def open_file(name):
                         if add_mega_db:
                             lyric_en_temp += f"pv_{PV_ID}.lyric_en.{lyric['id']}=\n"
                 lyric_temp = f"#{lyric_file_name}\n{lyric_temp}{lyric_en_temp}"
-                win.clearTextArea("t1")
-                win.setTextArea("t1", lyric_temp, end=False, callFunction=False)
-                win.infoBox("Tip","Please copy the lyrics db in the pop-up windows")
+                lyric_txt_path = Path("temp/lyric.txt")
+                with open(lyric_txt_path, "w") as f:
+                    f.write(lyric_temp)
+                os.startfile(lyric_txt_path)
+                win.infoBox("Tip","Please copy the lyrics db in the pop-up txt file")
             except:
                 r = traceback.format_exc()
                 win.errorBox("Error",f"Unknow error!\n\n{r}")
                 win.setLabel("check","Error")
             else:
+                Path(lyric_txt_path).unlink()
                 Path(lyric_dsc_file_name).unlink()
                 Path("temp").rmdir()
 
@@ -105,11 +109,5 @@ win.startLabelFrame("MegaMix+ Option",5,0,3)
 win.addCheckBox("use Lyric_en",6,0,3)
 win.addCheckBox("auto add empty Lyric db",7,0,3)
 win.stopLabelFrame()
-
-win.startSubWindow("Please copy the lyrics db in the pop-up windows")
-win.emptyCurrentContainer()
-win.setSize("600x800")
-win.addScrolledTextArea("t1")
-win.stopSubWindow()
 
 win.go()

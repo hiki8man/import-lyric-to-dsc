@@ -3,6 +3,7 @@ from appJar import gui
 import main
 from pathlib import Path
 import traceback
+import os
 
 def open_file(name):
     print(name, "press")
@@ -70,15 +71,17 @@ def open_file(name):
                         if add_mega_db:
                             lyric_en_temp += f"pv_{PV_ID}.lyric_en.{lyric['id']}=\n"
                 lyric_temp = f"#{lyric_file_name}\n{lyric_temp}{lyric_en_temp}"
-                win.clearTextArea("t1")
-                win.setTextArea("t1", lyric_temp, end=False, callFunction=False)
-                win.showSubWindow("请手动复制窗口里面的歌词db")
-                win.infoBox("提示","请手动复制弹出的窗口里面的歌词db")
+                lyric_txt_path = Path("temp/lyric.txt")
+                with open(lyric_txt_path, "w") as f:
+                    f.write(lyric_temp)
+                os.startfile(lyric_txt_path)
+                win.infoBox("提示","请手动复制弹出的txt里面的歌词db")
             except:
                 r = traceback.format_exc()
                 win.errorBox("错误",f"未知错误！\n\n{r}")
                 win.setLabel("check","导入失败")
             else:
+                Path(lyric_txt_path).unlink()
                 Path(lyric_dsc_file_name).unlink()
                 Path("temp").rmdir()
 
@@ -104,11 +107,5 @@ win.startLabelFrame("Mega39+用选项",5,0,3)
 win.addCheckBox("使用Lyric_en",6,0,3)
 win.addCheckBox("自动添加Mega39+需要的空白Lyric db",7,0,3)
 win.stopLabelFrame()
-
-win.startSubWindow("请手动复制窗口里面的歌词db")
-win.emptyCurrentContainer()
-win.setSize("600x800")
-win.addScrolledTextArea("t1")
-win.stopSubWindow()
 
 win.go()
