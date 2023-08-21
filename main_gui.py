@@ -50,7 +50,7 @@ def open_file(name):
             win.errorBox("错误","歌词文件路径错误！")
         elif dsc_path == "" or Path(dsc_path).exists() == False:
             win.errorBox("错误","DSC文件路径错误！")
-        elif save_path == "" or Path(save_path).exists() == False:
+        elif save_path == "" or (Path(save_path).parent).exists() == False:
             win.errorBox("错误","导出文件路径错误！")
         else:
             try:

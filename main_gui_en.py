@@ -51,7 +51,7 @@ def open_file(name):
             win.errorBox("Error","Lyric path error!")
         elif dsc_path == "" or Path(dsc_path).exists() == False:
             win.errorBox("Error","DSC path error!")
-        elif save_path == "" or Path(save_path).exists() == False:
+        elif save_path == "" or (Path(save_path).parent).exists() == False:
             win.errorBox("Error","Output Path error!")
         else:
             try:
