@@ -73,7 +73,7 @@ def open_file(name):
                             lyric_en_temp += f"pv_{PV_ID}.lyric_en.{lyric['id']}=\n"
                 lyric_temp = f"#{lyric_file_name}\n{lyric_temp}{lyric_en_temp}"
                 lyric_txt_path = Path("temp/lyric.txt")
-                with open(lyric_txt_path, "w") as f:
+                with open(lyric_txt_path, "w", encoding="UTF-8") as f:
                     f.write(lyric_temp)
                 os.startfile(lyric_txt_path)
                 win.infoBox("Tip","Please copy the lyrics db in the pop-up txt file")
