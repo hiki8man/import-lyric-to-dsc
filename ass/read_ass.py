@@ -76,7 +76,7 @@ def read(ass_file, lyric_offset):
                             lyric_data[id]["id"] = lyric_data[id-i]["id"] + 1
                             break
                     #前面全是空歌词则赋予初始值1
-                    elif lyric_data[id-i]["lyric"] == "\n" and (id - i) == 0:
+                    elif lyric_data[id-i]["lyric"] == "" and (id - i) == 0:
                         lyric_data[id]["id"] = 1
             id += 1
     return lyric_data
