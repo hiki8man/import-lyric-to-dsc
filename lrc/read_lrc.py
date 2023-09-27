@@ -41,7 +41,7 @@ def read(lrc_file,is_lrc_flie,lyric_offset):
                 print("Last emply lyric")
                 break
             #空歌词跳过
-            if lyric_data[id]["lyric"] == "\n" or lyric_data[id]["lyric"] == "":
+            if lyric_data[id]["lyric"] == "" or lyric_data[id]["lyric"] == "":
                 lyric_data[id]["lyric"] = ""
             #第一句非空歌词标号
             elif id == 0:
