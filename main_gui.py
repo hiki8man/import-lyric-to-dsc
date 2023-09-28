@@ -4,7 +4,7 @@ import main
 from pathlib import Path
 import traceback
 import os
-import kakasi
+import pykakasi
 
 def convert_to_romaji(text):
     kks = kakasi.kakasi()
