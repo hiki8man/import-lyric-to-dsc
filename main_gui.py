@@ -4,6 +4,15 @@ import main
 from pathlib import Path
 import traceback
 import os
+import kakasi
+
+def convert_to_romaji(text):
+    kks = kakasi.kakasi()
+    result_list = kks.convert(text)
+    result = ""
+    for i in result_list:
+        result += i['hepburn']
+    return result
 
 def open_file(name):
     print(name, "press")
@@ -35,6 +44,7 @@ def open_file(name):
 
         use_lyric_en = win.getCheckBox("使用Lyric_en")
         add_mega_db = win.getCheckBox("自动添加Mega39+需要的空白Lyric db")
+        use_kakasi = win.getCheckBox("使用kakasi添加罗马音歌词")
 
         PV_ID = win.getSpinBox("PV_ID")
         if len(PV_ID) < 3:
@@ -68,7 +78,10 @@ def open_file(name):
                             lyric_temp += f"pv_{PV_ID}.lyric.{lyric['id']}=\n"
                     else:
                         lyric_temp += f"pv_{PV_ID}.lyric.{lyric['id']}={lyric['lyric']}\n"
-                        if add_mega_db:
+                        if use_kakasi:
+                            kakasi_temp = convert_to_romaji(lyric['lyric'])
+                            lyric_en_temp += f"pv_{PV_ID}.lyric_en.{lyric['id']}={kakasi_temp}\n"
+                        elif add_mega_db:
                             lyric_en_temp += f"pv_{PV_ID}.lyric_en.{lyric['id']}=\n"
                 lyric_temp = f"#{lyric_file_name}\n{lyric_temp}{lyric_en_temp}"
                 lyric_txt_path = Path("temp/lyric.txt")
@@ -106,6 +119,7 @@ win.addButton("导入歌词字幕",open_file,4,2)
 win.startLabelFrame("Mega39+用选项",5,0,3)
 win.addCheckBox("使用Lyric_en",6,0,3)
 win.addCheckBox("自动添加Mega39+需要的空白Lyric db",7,0,3)
+win.addCheckBox("使用kakasi添加罗马音歌词",8,0,3)
 win.stopLabelFrame()
 
 win.go()

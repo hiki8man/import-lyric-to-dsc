@@ -4,6 +4,15 @@ import main
 from pathlib import Path
 import traceback
 import os
+import kakasi
+
+def convert_to_romaji(text):
+    kks = kakasi.kakasi()
+    result_list = kks.convert(text)
+    result = ""
+    for i in result_list:
+        result += i['hepburn']
+    return result
 
 def open_file(name):
     print(name, "press")
@@ -12,7 +21,7 @@ def open_file(name):
         if ass_path != "":
             print(ass_path)
             win.setEntry("Lyric Path:",ass_path)
-    elif name == "DSC File...":
+    if name == "DSC File...":
         dsc_path = win.openBox("Select you want to import dsc file......",fileTypes=[('DSC File', '*.dsc')])
         if dsc_path != "":
             if dsc_path != win.getEntry("Output Path:"):
@@ -20,7 +29,7 @@ def open_file(name):
                 win.setEntry("DSC Path:",dsc_path)
             else:
                 win.errorBox("Error","You mush change file name to another name!")
-    elif name == "Save as...":
+    if name == "Save as...":
         dsc_path = win.saveBox("Select you want to save in......",fileTypes=[('DSC File', '*.dsc')])
         if dsc_path != "":
             if dsc_path != win.getEntry("DSC Path:"):
@@ -28,13 +37,14 @@ def open_file(name):
                 win.setEntry("Output Path:",dsc_path)
             else:
                 win.errorBox("Error","You mush change file name to another name!")
-    elif name == "Import to DSC":
+    if name == "Import to DSC":
         ass_path = win.getEntry("Lyric Path:")
         dsc_path = win.getEntry("DSC Path:")
         save_path = win.getEntry("Output Path:")
 
         use_lyric_en = win.getCheckBox("use Lyric_en")
         add_mega_db = win.getCheckBox("auto add empty Lyric db")
+        use_kakasi = win.getCheckBox("use kakasi auto add romaji lyric")
 
         PV_ID = win.getSpinBox("PV_ID")
         if len(PV_ID) < 3:
@@ -69,7 +79,10 @@ def open_file(name):
                             lyric_temp += f"pv_{PV_ID}.lyric.{lyric['id']}=\n"
                     else:
                         lyric_temp += f"pv_{PV_ID}.lyric.{lyric['id']}={lyric['lyric']}\n"
-                        if add_mega_db:
+                        if use_kakasi:
+                            kakasi_temp = convert_to_romaji(lyric['lyric'])
+                            lyric_en_temp += f"pv_{PV_ID}.lyric_en.{lyric['id']}={kakasi_temp}\n"
+                        elif add_mega_db:
                             lyric_en_temp += f"pv_{PV_ID}.lyric_en.{lyric['id']}=\n"
                 lyric_temp = f"#{lyric_file_name}\n{lyric_temp}{lyric_en_temp}"
                 lyric_txt_path = Path("temp/lyric.txt")
@@ -108,6 +121,7 @@ win.setSpinBox("PV_ID", 900, callFunction=True)
 win.startLabelFrame("MegaMix+ Option",5,0,3)
 win.addCheckBox("use Lyric_en",6,0,3)
 win.addCheckBox("auto add empty Lyric db",7,0,3)
+win.addCheckBox("use kakasi auto add romaji lyric",8,0,3)
 win.stopLabelFrame()
 
 win.go()
