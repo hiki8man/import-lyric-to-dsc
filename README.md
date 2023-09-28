@@ -33,6 +33,7 @@ ASS/LRC/PPD歌词格式文件导入支持
 
 ------------------------------------------
 使用到的转罗马音歌词的库：
+
 pykakasi：https://codeberg.org/miurahr/pykakasi
 
 
