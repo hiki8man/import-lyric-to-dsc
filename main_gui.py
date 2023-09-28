@@ -7,7 +7,7 @@ import os
 import pykakasi
 
 def convert_to_romaji(text):
-    kks = kakasi.kakasi()
+    kks = pykakasi.kakasi()
     result_list = kks.convert(text)
     result = ""
     for i in result_list:
