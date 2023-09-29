@@ -12,6 +12,8 @@ def convert_to_romaji(text):
     result = ""
     for i in result_list:
         result += i['hepburn']
+        if i['hepburn'][-1] != " " or i['hepburn'][-1] != "　":
+            result += " "
     return result
 
 def open_file(name):
