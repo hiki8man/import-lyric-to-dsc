@@ -7,12 +7,27 @@ import os
 import pykakasi
 
 def convert_to_romaji(text):
-    kks = pykakasi.kakasi()
+    kks = kakasi.kakasi()
     result_list = kks.convert(text)
     result = ""
+    result_len = len(result_list)
+    num = 0
+    symbols = (
+	'、', '。', '’', 
+	'”', '｛', '｝',
+	'「', '」', 'ー',
+	'＝', '_', '+',
+	'/', '*', '-',
+	'(', ')',
+    " ","　",
+    "'","?","？"
+    )
     for i in result_list:
+        num += 1
         result += i['hepburn']
-        if i['hepburn'][-1] != " " or i['hepburn'][-1] != "　":
+        if num < result_len and result_list[num]['hepburn'] in symbols:
+            result += ""
+        elif i['hepburn'][-1] not in symbols:
             result += " "
     return result
 
