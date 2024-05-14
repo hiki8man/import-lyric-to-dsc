@@ -3,31 +3,31 @@ from pprint import pprint
 def change_hold_note_show(dsc_data_list):
     num = 0
     fix_dsc_data_list = dsc_data_list.copy()
-    for time_data in dsc_data_list:
-        list_temp1_hold = [0,0,0,0]
-        list_temp2_hold = []
-        list_temp = []
-        
+
     op_note_circle_hold   = b'\x06\x00\x00\x00\x05\x00\x00\x00'
     op_note_cross_hold    = b'\x06\x00\x00\x00\x06\x00\x00\x00'
     op_note_square_hold   = b'\x06\x00\x00\x00\x07\x00\x00\x00'
     op_note_triangle_hold = b'\x06\x00\x00\x00\x04\x00\x00\x00'
-        
+
+    for time_data in dsc_data_list:
+        list_temp1_hold = [[],[],[],[]]
+        list_temp2_hold = []
+        list_temp = []
         for i in range(len(time_data["data"])):
             check_hold_note = time_data["data"][i][0:8]
             if check_hold_note == op_note_circle_hold:
-                list_temp1_hold[0] = time_data["data"][i]
+                list_temp1_hold[0].append(time_data["data"][i])
             elif check_hold_note == op_note_cross_hold:
-                list_temp1_hold[1] = time_data["data"][i]
+                list_temp1_hold[1].append(time_data["data"][i])
             elif check_hold_note == op_note_square_hold:
-                list_temp1_hold[2] = time_data["data"][i]
+                list_temp1_hold[2].append(time_data["data"][i])
             elif check_hold_note == op_note_triangle_hold:
-                list_temp1_hold[3] = time_data["data"][i]
+                list_temp1_hold[3].append(time_data["data"][i])
             else:
                 list_temp.append(time_data["data"][i])
         for i in list_temp1_hold:
-            if i != 0:
-                list_temp2_hold.append(i)
+            if len(i) > 0:
+                list_temp2_hold += i
         list_temp.extend(list_temp2_hold)
         if len(list_temp2_hold) != 0:
             fix_dsc_data_list[num]["data"] = list_temp.copy()
