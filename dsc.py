@@ -23,7 +23,18 @@ for common in list:
 #bitout.write(dsc_ft+byte_val+test*7)
 #bitout.close
 
-ft_format = b'\x21\x09\x05\x14'
+#修正使用了 Nas 的编辑器导致头部格式错误而无法使用的BUG
+#标准的FT格式DSC头部为列表中第一项，但Nas的编辑器在保存时使用了第二项从而导致原有代码无法正常检测
+ft_format = [b'\x21\x09\x05\x14',
+             b'\x17\x25\x12\x15',
+             b'\x18\x20\x06\x11',
+             b'\x21\x01\x03\x16',
+             b'\x18\x17\x02\x15',
+             b'\x18\x13\x03\x14',
+             b'\x16\x23\x01\x14',
+             b'\x22\x15\x08\x13',
+             b'\x21\x31\x01\x13']
+
 note_format = b'\x06\x00\x00\x00'
 note_circle_hold = note_format + b'\x05\x00\x00\x00'
 note_cross_hold  = note_format + b'\x06\x00\x00\x00'
@@ -37,7 +48,7 @@ import os
 
 def write(dsc_data_list, dsc_file_path):
     with open(dsc_file_path, 'wb') as fix_dsc:
-        fix_dsc.write(ft_format)
+        fix_dsc.write(ft_format[0])
         print(len(dsc_data_list))
         for data in dsc_data_list:
             if data["time"] != None: 
@@ -52,9 +63,8 @@ def read(dsc_file_name):
         for data in read_dsc:
             dsc_data.append(data)
         dsc_format = bytearray(dsc_data[0:4])
-        if dsc_format != ft_format:
-            print("not ft dsc")
-            sys.exit(0)
+        if ft_format.count(dsc_format) == 0:
+            raise ValueError("it's only support FT format")
         else:
             dsc_data_list=[]
             dsc_id = 4
