@@ -1,4 +1,5 @@
 from pprint import pprint
+END_command = b"\x00\x00\x00\x00"
 
 def change_hold_note_show(dsc_data_list):
     num = 0
@@ -55,7 +56,7 @@ def delete_lyric(dsc_data_list):
         if write_data["time"] != "no":
             fix_dsc_data_list.append(write_data)
     return fix_dsc_data_list
-    
+
 def get_music_offset(dsc_data_list):
     op_music_play = b'\x19\x00\x00\x00'
     music_play_offset = -1
@@ -73,7 +74,7 @@ def get_music_offset(dsc_data_list):
         music_play_offset = 0
     print(music_play_offset)
     return music_play_offset
-
+'''
 def merge_dsc_data(input_dsc=[],input_ass=[]):
     merge_dsc_data_list = []
     merge_temp2 = []
@@ -113,3 +114,68 @@ def merge_dsc_data(input_dsc=[],input_ass=[]):
     for b in merge_temp2:
         merge_dsc_data_list.append(b)
     return merge_dsc_data_list
+'''
+
+def merge_dsc_data(_data1=[],_data2=[]):
+    (FstData, SecData) = __get_dsc_data_order(_data1, _data2)
+    MergeDSCData = []
+    i = 0
+    for dsc_data1 in FstData:
+        if dsc_data1["time"] == None or i >= len(SecData):
+            MergeDSCData.append(dsc_data1)
+            continue
+        if i == 0 and SecData[i]["time"] == None:
+            MergeDSCData.append(SecData[i])
+            i += 1
+        if __CompareDscTimeSize(dsc_data1,SecData[i]) >= 0:
+            for dsc_data2 in SecData[i:]:
+                compare_size = __CompareDscTimeSize(dsc_data1,dsc_data2)
+                if compare_size > 0:
+                    MergeDSCData.append(dsc_data2)
+                    i += 1
+                    if i >= len(SecData):
+                        MergeDSCData.append(dsc_data1)
+                elif compare_size == 0:
+                    MergeDSCData.append(dsc_data2)
+                    MergeDSCData[-1]["data"] += dsc_data1["data"].copy()
+                    i += 1
+                    break
+                else:
+                    MergeDSCData.append(dsc_data1)
+                    break
+        else:
+            MergeDSCData.append(dsc_data1)
+    
+    return MergeDSCData
+        
+def __RemoveEND(_data):
+    Last_command = []
+    for command in _data[-1]["data"]:
+        if command != END_command:
+            Last_command.append(command)
+    if len(Last_command) != 0:
+        _data[-1]["data"] = Last_command
+        return _data
+    else:
+        return _data[:-1]
+
+def __CompareDscTimeSize(_data1, _data2):
+    time1 = int.from_bytes(_data1["time"][4:] ,byteorder='little')
+    time2 = int.from_bytes(_data2["time"][4:] ,byteorder='little')
+    if time1 > time2:
+        return 1
+    elif time1 == time2:
+        return 0
+    else:
+        return -1
+
+
+def __get_dsc_data_order(_data1, _data2):
+    if __CompareDscTimeSize(_data1[-1], _data2[-1]) > 0:
+        data2 = __RemoveEND(_data2)
+        return (_data1, _data2)
+    else:
+        data1 = __RemoveEND(_data1)
+        return (_data2, _data1)
+
+
